@@ -1,0 +1,62 @@
+import os
+import ast
+import csv
+from radon.complexity import cc_visit
+from config import get_complex_code_thresholds
+
+LONG_METHOD_THRESHOLD = get_complex_code_thresholds("long_method")
+LINE_THRESHOLD = LONG_METHOD_THRESHOLD["line_count"]
+COMPLEXITY_THRESHOLD = LONG_METHOD_THRESHOLD["cyclomatic_complexity"]
+
+def analyze_method(method_node):
+    """Analyzes a function/method for line count and cyclomatic complexity."""
+
+    line_count = method_node.end_lineno - method_node.lineno + 1
+    cyclomatic_complexity = sum([block.complexity for block in cc_visit(ast.unparse(method_node))])
+    is_smelly = line_count > LINE_THRESHOLD or cyclomatic_complexity > COMPLEXITY_THRESHOLD
+
+    return {
+        "method_name": method_node.name,
+        "line_count": line_count,
+        "complexity": cyclomatic_complexity,
+        "is_smelly": is_smelly
+    }
+
+def analyze_file(filepath):
+    """Analyzes each function in the file for code smells and returns results."""
+    
+    with open(filepath, "r") as file:
+        tree = ast.parse(file.read())
+
+    results = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            analysis = analyze_method(node)
+            results.append(analysis)
+    
+    return results
+
+def save_results_to_csv(results, output_file="code_smells.csv"):
+    """Saves the analyzed results to a CSV file."""
+    
+    with open(output_file, mode="w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["method_name", "line_count", "complexity", "is_smelly"])
+
+        for result in results:
+            writer.writerow([
+                result["method_name"],
+                result["line_count"],
+                result["complexity"],
+                result["is_smelly"]
+            ])
+    print(f"Results saved to {output_file}")
+
+def main():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    example_file_path = os.path.join(current_dir, "..", "data", "example.py")
+    results = analyze_file(example_file_path)
+    save_results_to_csv(results)
+
+if __name__ == "__main__":
+    main()
