@@ -14,7 +14,7 @@ def analyze_method(method_node, filename):
     line_count = method_node.end_lineno - method_node.lineno + 1
     cyclomatic_complexity = sum([block.complexity for block in cc_visit(ast.unparse(method_node))])
     code_smell_detected = line_count > LINE_THRESHOLD or cyclomatic_complexity > COMPLEXITY_THRESHOLD
-    code_smell = "No Smell detected"
+    code_smell = "None"
     if code_smell_detected:
         if line_count > LINE_THRESHOLD:
             code_smell = "Long Method"
