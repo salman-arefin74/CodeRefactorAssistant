@@ -13,7 +13,7 @@ file_path = os.path.join(data_dir, file_name)
 
 # Data pre-processing
 dataset = pandas.read_csv(file_path)
-dataset = dataset.drop(['file_name', 'method_name'], axis=1)
+dataset = dataset.drop(['file_name', 'method_name', 'code_smell'], axis=1)
 dataset['code_smell_detected'] = dataset['code_smell_detected'].fillna(False)
 dataset['code_smell_detected'] = dataset['code_smell_detected'].map({True: 1, False: 0}).astype(int)
 feature = dataset[['line_count', 'complexity']]
