@@ -21,7 +21,7 @@ detected_smells = dataset.to_dict(orient='records')
 refactoring_suggestions = []
 
 for smell in detected_smells:
-    if smell["code_smell"] != "No Smell detected":
+    if smell["code_smell"] != "None":
         suggestion = generate_refactoring_suggestion(smell["code_smell"], smell["method_name"])
         refactoring_suggestions.append([smell["method_name"], smell["code_smell"], suggestion])
 
