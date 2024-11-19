@@ -33,5 +33,3 @@ with open(csv_file, "w", newline="") as csvfile:
 
     for suggestion in refactoring_suggestions:
         writer.writerow(suggestion)
-
-print(f"Refactoring suggestions have been written to '{csv_file}'.")
