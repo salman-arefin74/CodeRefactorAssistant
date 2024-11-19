@@ -10,3 +10,4 @@ A code refactor assistant, which will detect code smells and help refactor the c
 * Run `python src/knn_classifier.py` to run the K-Nearest Neighbor classification algorithm on the generated data.
 * Run `python src/naive_bayes_classifier.py` to run the Naive Bayes classification algorithm on the generated data.
 * Run `python src/support_vector_machine_classifier.py` to run the Support Vector Machine classification algorithm on the generated data.
+* Run `python src/code_refactor_suggestions_generator.py` to generate a `csv` file filled with information of refactoring suggestions for particular code smells.
