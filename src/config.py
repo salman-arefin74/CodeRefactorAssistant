@@ -1,6 +1,6 @@
 complex_code_thresholds = {
         "long_method": {
-            "line_count": 30,
+            "line_count": 40,
             "cyclomatic_complexity": 10
             }
         }
