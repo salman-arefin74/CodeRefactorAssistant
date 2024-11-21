@@ -82,3 +82,23 @@ def function_c():
     x = 1
     y = 2
     print("Sum:", x + y)
+
+def process_user_data(users):
+    for user in users:
+        if user["is_active"]:
+            print(f"Processing active user: {user['name']}")
+            if "address" in user:
+                print(f"Address found: {user['address']}")
+            else:
+                print("Address not found")
+            if user["role"] == "admin":
+                print(f"Granting admin privileges to {user['name']}")
+                # Simulate granting privileges
+            elif user["role"] == "user":
+                print(f"Granting user privileges to {user['name']}")
+                # Simulate granting privileges
+            else:
+                print(f"Unknown role for {user['name']}")
+            print(f"Email sent to {user['email']}")
+        else:
+            print(f"Skipping inactive user: {user['name']}")
