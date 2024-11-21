@@ -13,7 +13,7 @@ file_path = os.path.join(data_dir, file_name)
 
 # Data pre-processing
 dataset = pandas.read_csv(file_path)
-dataset = dataset.drop(['file_name', 'method_name', 'code_smell'], axis=1)
+dataset = dataset.drop(['file_name', 'method_name'], axis=1)
 dataset['code_smell_detected'] = dataset['code_smell_detected'].fillna(False)
 dataset['code_smell_detected'] = dataset['code_smell_detected'].map({True: 1, False: 0}).astype(int)
 feature = dataset[['line_count', 'complexity']]
@@ -29,14 +29,6 @@ predictions = model.predict(feature_test)
 accuracy = model.score(feature_test, target_test)
 print(f"Model accuracy: {accuracy:.3f}")
 
-# Analyze feature importance
-importances = model.feature_importances_
-features = feature.columns
-matplotlib.pyplot.barh(features, importances)
-matplotlib.pyplot.xlabel('Importance')
-matplotlib.pyplot.title('Important Features in Random Forest Classifier')
-matplotlib.pyplot.show()
-
 # Test the model with new data
 model_name = "random_forest_classifier.pkl"
 joblib.dump(model, model_name)
@@ -44,3 +36,10 @@ load_model = joblib.load(model_name)
 test_model = pandas.DataFrame({'line_count': [35], 'complexity': [12]})
 prediction = load_model.predict(test_model)
 print(f"Code smell detected for: {test_model}" if prediction[0] == 1 else f"No code smell detected for {test_model}")
+
+def predict_code_smell(line_count, complexity):
+    """Predicts if a code smell is detected in the given code snippet."""
+    
+    model = joblib.load("random_forest_classifier.pkl")
+    prediction = model.predict([[line_count, complexity]])
+    return prediction[0] == 1

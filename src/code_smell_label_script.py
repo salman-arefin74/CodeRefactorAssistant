@@ -13,12 +13,14 @@ def analyze_method(method_node, filename):
 
     line_count = method_node.end_lineno - method_node.lineno + 1
     cyclomatic_complexity = sum([block.complexity for block in cc_visit(ast.unparse(method_node))])
+    code_smell_detected = line_count > LINE_THRESHOLD or cyclomatic_complexity > COMPLEXITY_THRESHOLD
 
     return {
         "file_name": filename,
         "method_name": method_node.name,
         "line_count": line_count,
-        "complexity": cyclomatic_complexity
+        "complexity": cyclomatic_complexity,
+        "code_smell_detected": code_smell_detected
     }
 
 def analyze_file(filepath, filename):
@@ -40,14 +42,15 @@ def save_results_to_csv(results, output_file="code_smells.csv"):
     
     with open(output_file, mode="w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["file_name", "method_name", "line_count", "complexity", "code_smell_detected", "code_smell"])
+        writer.writerow(["file_name", "method_name", "line_count", "complexity", "code_smell_detected"])
 
         for result in results:
             writer.writerow([
                 result["file_name"],
                 result["method_name"],
                 result["line_count"],
-                result["complexity"]
+                result["complexity"],
+                result["code_smell_detected"]
             ])
     print(f"Results saved to {output_file}")
 
